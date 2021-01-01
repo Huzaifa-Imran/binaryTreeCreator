@@ -1,2 +1,6 @@
 # binaryTreeCreator
-Create a binary tree using In Order and Pre Order or Post Order strings.
+Automatically creates a binary tree using In Order and Pre Order or In Order and Post Order strings.
+
+Make sure you have Python compiler installed on your computer and added to PATH.
+
+Next, run "python path_to_file.py" to run the program.
