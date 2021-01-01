@@ -88,8 +88,11 @@ def subtreeFinder(answer, inorder, string):
     else:
         root = Node(string[-1])
         string = string[:-1]
-    
-    rootIndex = inorder.index(root.val)
+    try:
+        rootIndex = inorder.index(root.val)
+    except ValueError:
+        print("Invalid strings. Tree can not be created. Exiting")
+        exit()
     leftInOrder = inorder[0:rootIndex]
     rightInOrder = inorder[rootIndex+1:]
     leftString = [x for x in string if x in leftInOrder]
