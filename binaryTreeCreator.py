@@ -120,7 +120,6 @@ def main():
     else:
         postorder = input("Post Order string: ").split()
         root = subtreeFinder(False, inorder, postorder)
-    print(inorder)
     print(root)
 
 if __name__ == '__main__':
