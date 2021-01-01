@@ -8,7 +8,7 @@ class Node():
         lines = self._build_tree_string(0, False, '-')[0]
         return '\n' + '\n'.join((line.rstrip() for line in lines))
 
-    def __len__(self):
+    def __len__(self):  
         current_level = [self]
         size = 0
         while len(current_level) > 0:
@@ -103,13 +103,14 @@ def subtreeFinder(answer, inorder, string):
 
 def main():
     global answer
-    inorder = input("Enter in order string: ").split(' ')
-    answer = input("Do you want to enter pre order string?('yes' or 'no'): ")
+    print("Enter the strings with each character separated by spaces.")
+    inorder = input("In Order string: ").split(' ')
+    answer = input("Do you want to enter Pre Order?('yes' or 'no'): ")
     if answer == 'yes':
-        preorder = input("Enter pre order string: ").split(' ')
+        preorder = input("Pre Order string: ").split(' ')
         root = subtreeFinder(True, inorder, preorder)
     else:
-        postorder = input("Enter post order string: ").split(' ')
+        postorder = input("Post Order string: ").split(' ')
         root = subtreeFinder(False, inorder, postorder)
     print(root)
 
