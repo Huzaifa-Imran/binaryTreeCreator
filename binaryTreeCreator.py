@@ -110,7 +110,6 @@ def main():
         root = subtreeFinder(True, inorder, preorder)
     else:
         postorder = input("Enter post order string: ").split(' ')
-        # postorder = [int(x) for x in postorder]
         root = subtreeFinder(False, inorder, postorder)
     print(root)
 
