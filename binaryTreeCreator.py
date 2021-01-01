@@ -5,7 +5,7 @@ class Node():
         self.right = None
 
     def __str__(self):
-        lines = self._build_tree_string(0, False, '-')[0]
+        lines = self._build_tree_string(self, 0, False, '-')[0]
         return '\n' + '\n'.join((line.rstrip() for line in lines))
 
     def __len__(self):  
@@ -23,8 +23,7 @@ class Node():
             current_level = next_level
         return size
 
-    def _build_tree_string(self, curr_index, index=False, delimiter='-'):
-        root = self
+    def _build_tree_string(self, root, curr_index, index=False, delimiter='-'):
         if root is None:
             return [], 0, 0, 0
 
@@ -39,9 +38,9 @@ class Node():
 
         # Get the left and right sub-boxes, their widths, and root repr positions
         l_box, l_box_width, l_root_start, l_root_end = \
-            _build_tree_string(root.left, 2 * curr_index + 1, index, delimiter)
+            self._build_tree_string(root.left, 2 * curr_index + 1, index, delimiter)
         r_box, r_box_width, r_root_start, r_root_end = \
-            _build_tree_string(root.right, 2 * curr_index + 2, index, delimiter)
+            self._build_tree_string(root.right, 2 * curr_index + 2, index, delimiter)
 
         # Draw the branch connecting the current root node to the left sub-box
         # Pad the line with whitespaces where necessary
