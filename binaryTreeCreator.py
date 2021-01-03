@@ -101,12 +101,14 @@ def subtreeFinder(answer, inorder, string):
         exit()
     leftInOrder = inorder[0:rootIndex]
     rightInOrder = inorder[rootIndex+1:]
-    leftString = [x for x in string if x in leftInOrder]
-    rightString = [x for x in string if x in rightInOrder]
+    leftString = string[:rootIndex]
+    rightString = string[rootIndex:]
     if len(leftInOrder):
         root.left = subtreeFinder(answer, leftInOrder, leftString)
+        print(root.left.value, end=" ")
     if len(rightInOrder):
         root.right = subtreeFinder(answer, rightInOrder, rightString)
+        print(root.right.value, end=" ")
     return root
 
 def main():
@@ -116,10 +118,13 @@ def main():
     answer = input("Do you want to enter Pre Order string?('yes' or 'no'): ")
     if answer == 'yes':
         preorder = input("Pre Order string: ").split()
+        print("\nPost Order String = ", end="")
         root = subtreeFinder(True, inorder, preorder)
     else:
         postorder = input("Post Order string: ").split()
+        print("\nPre Order String = ", end=None)
         root = subtreeFinder(False, inorder, postorder)
+    print(root.value)
     print(root)
 
 if __name__ == '__main__':
