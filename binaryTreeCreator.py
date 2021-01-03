@@ -82,9 +82,6 @@ def _build_tree_string(root, curr_index, index=False, delimiter='-'):
     return new_box, len(new_box[0]), new_root_start, new_root_end
 
 def subtreeFinder(answer, inorder, string):
-    if len(inorder) != len(set(inorder)) or len(string) != len(set(string)):
-        print("Invalid strings. Strings have repetitive elements. Exiting...")
-        exit()
     if len(inorder) != len(string):
         print("Invalid strings. Number of elements are unequal. Exiting...")
         exit()
@@ -103,12 +100,16 @@ def subtreeFinder(answer, inorder, string):
     rightInOrder = inorder[rootIndex+1:]
     leftString = string[:rootIndex]
     rightString = string[rootIndex:]
+    if not answer:
+        print(root.value, end=" ")
     if len(leftInOrder):
         root.left = subtreeFinder(answer, leftInOrder, leftString)
-        print(root.left.value, end=" ")
+        if answer:
+            print(root.left.value, end=" ")
     if len(rightInOrder):
         root.right = subtreeFinder(answer, rightInOrder, rightString)
-        print(root.right.value, end=" ")
+        if answer:
+            print(root.right.value, end=" ")
     return root
 
 def main():
@@ -120,11 +121,12 @@ def main():
         preorder = input("Pre Order string: ").split()
         print("\nPost Order String = ", end="")
         root = subtreeFinder(True, inorder, preorder)
+        print(root.value)
     else:
         postorder = input("Post Order string: ").split()
-        print("\nPre Order String = ", end=None)
+        print("\nPre Order String = ", end="")
         root = subtreeFinder(False, inorder, postorder)
-    print(root.value)
+        print()
     print(root)
 
 if __name__ == '__main__':
