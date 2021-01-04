@@ -100,16 +100,18 @@ def subtreeFinder(answer, inorder, string):
     rightInOrder = inorder[rootIndex+1:]
     leftString = string[:rootIndex]
     rightString = string[rootIndex:]
+    
     if not answer:
         print(root.value, end=" ")
+
     if len(leftInOrder):
         root.left = subtreeFinder(answer, leftInOrder, leftString)
-        if answer:
-            print(root.left.value, end=" ")
     if len(rightInOrder):
         root.right = subtreeFinder(answer, rightInOrder, rightString)
-        if answer:
-            print(root.right.value, end=" ")
+
+    if answer:
+        print(root.value, end=" ")
+        
     return root
 
 def main():
