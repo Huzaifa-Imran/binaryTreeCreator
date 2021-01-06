@@ -1,7 +1,7 @@
 # binaryTreeCreator
 Automatically creates a binary tree or BST with the given strings.
 
-Input the strings each character spearated by spaces.
+Input the strings with each character spearated by spaces.
 
 Make sure you have Python compiler installed on your computer and added to PATH.
 
