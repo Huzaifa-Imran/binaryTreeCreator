@@ -123,12 +123,11 @@ def main():
         preorder = input("Pre Order string: ").split()
         print("\nPost Order String = ", end="")
         root = subtreeFinder(True, inorder, preorder)
-        print(root.value)
     else:
         postorder = input("Post Order string: ").split()
         print("\nPre Order String = ", end="")
         root = subtreeFinder(False, inorder, postorder)
-        print()
+    print()
     print(root)
 
 if __name__ == '__main__':
