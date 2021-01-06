@@ -23,6 +23,48 @@ class Node():
             current_level = next_level
         return size
 
+    def inorder(self):
+        result = ""
+        stack = []
+        node = self
+
+        while node or stack:
+            while node:
+                stack.append(node)
+                node = node.left
+            if stack:
+                node = stack.pop()
+                result += str(node.value) + " " 
+                node = node.right
+
+        return result
+
+    def preorder(self):
+        result = ""
+        stack = [self]
+
+        while stack:
+            node = stack.pop()
+            if node:
+                result += str(node.value) + " "
+                stack.append(node.right)
+                stack.append(node.left)
+
+        return result
+
+    def postorder(self):
+        result = ""
+        stack = [self]
+
+        while stack:
+            node = stack.pop()
+            if node:
+                result += str(node.value) + " "
+                stack.append(node.left)
+                stack.append(node.right)
+
+        return result[::-1]
+
 def _build_tree_string(root, curr_index, index=False, delimiter='-'):
     if root is None:
         return [], 0, 0, 0
@@ -82,6 +124,8 @@ def _build_tree_string(root, curr_index, index=False, delimiter='-'):
     return new_box, len(new_box[0]), new_root_start, new_root_end
 
 def subtreeFinder(answer, inorder, string):
+    if string == []:
+        return
     if len(inorder) != len(string):
         print("Invalid strings. Number of elements are unequal. Exiting...")
         exit()
@@ -114,19 +158,88 @@ def subtreeFinder(answer, inorder, string):
         
     return root
 
+def staticTree(string):
+    nodes = [None if v == "-1" else Node(v) for v in string]
+
+    for index in range(1, len(nodes)):
+        node = nodes[index]
+        if node is not None:
+            parent_index = (index - 1) // 2
+            parent = nodes[parent_index]
+            if parent is None:
+                print('parent node missing at index {}. Exiting...'.format(parent_index))
+                exit()
+            elif index % 2:
+                parent.left = node
+            else:
+                parent.right = node
+
+    return nodes[0] if nodes else None
+
+def createBST(string):
+    if string == []:
+        return
+    root = Node(string.pop(0))
+    for index in range(0, len(string)):
+        temp = root
+        while(True):
+            if string[index] > temp.value:
+                if temp.right == None:
+                    temp.right = Node(string[index])
+                    break
+                else:
+                    temp = temp.right
+            elif string[index] < temp.value:
+                if temp.left == None:
+                    temp.left = Node(string[index])
+                    break
+                else:
+                    temp = temp.left
+            else:
+                break
+    return root
+
 def main():
     global answer
-    print("Enter the strings with each character separated by spaces.")
-    inorder = input("In Order string: ").split()
-    answer = input("Do you want to enter Pre Order string?('yes' or 'no'): ")
-    if answer == 'yes':
-        preorder = input("Pre Order string: ").split()
-        print("\nPost Order String = ", end="")
-        root = subtreeFinder(True, inorder, preorder)
-    else:
-        postorder = input("Post Order string: ").split()
-        print("\nPre Order String = ", end="")
-        root = subtreeFinder(False, inorder, postorder)
+    print("[1] Create a Binary Tree using inorder and preorder strings.")
+    print("[2] Create a Binary Tree using inorder and postorder strings.")
+    print("[3] Create a Binary Tree using array string.")
+    print("[4] Create a BST.")
+    while(True):
+        answer = input("Enter your choice: ")
+        if answer == '1' or answer == '2':
+            print("\nEnter the strings with each character separated by spaces.")
+            inorder = input("In Order string: ").split()
+            if answer == '1':
+                preorder = input("Pre Order string: ").split()
+                print("\nPost Order String = ", end="")
+                root = subtreeFinder(True, inorder, preorder)
+            else:
+                postorder = input("Post Order string: ").split()
+                print("\nPre Order String = ", end="")
+                root = subtreeFinder(False, inorder, postorder)
+            break
+        elif answer == '3' or answer == '4':
+            if answer == '3':
+                print("\nEnter the string with each character separated by spaces. Use -1 as a character to represent no node.")
+                string = input("String: ").split()
+                root = staticTree(string)
+            else:
+                print("\nEnter the string with each number separated by spaces.")
+                try:
+                    string = [int(x) for x in input("String: ").split()]
+                except ValueError:
+                    print("BST can only contain numbers! Exiting...")
+                    exit()
+                root = createBST(string)
+            if root != None:
+                print(f"\nPreorder string = {root.preorder()}")
+                print(f"Inorder string = {root.inorder()}")
+                print(f"Postorder string = {root.postorder()}")
+            break
+        else:
+            print("Invalid choice!")
+
     print()
     print(root)
 
