@@ -1,5 +1,5 @@
 # binaryTreeCreator
-Automatically creates a binary tree or BST with the given strings.
+Automatically creates a binary tree, BST or Expression Tree with the given strings.
 
 Input the strings with each character spearated by spaces.
 
