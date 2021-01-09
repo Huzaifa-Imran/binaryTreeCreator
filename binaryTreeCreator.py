@@ -1,3 +1,4 @@
+import re
 class Node():
     def __init__(self, value):
         self.value = self.val = value
@@ -199,12 +200,65 @@ def createBST(string):
                 break
     return root
 
+# 2*3/(2-1)+5*(4-1)
+def infixToPostfix(expression):
+    stack = []
+    postfix = []
+    index = 0
+    prec = {'+': 2, '-': 2, '*': 3, '/': 3, '(': 1}
+    while(index < len(expression)):
+        element = expression[index]
+        if(element in "+-*/"):
+            if stack == []:
+                stack.append(element)
+            else:
+                top = stack[-1]
+                if prec[element] > prec[top]:
+                    stack.append(element)
+                elif prec[top] == prec[element]:
+                    postfix.append(stack.pop())
+                    stack.append(element)
+                else:
+                    postfix.append(stack.pop())
+                    continue
+        elif element == '(':
+            stack.append(element)
+        elif element == ')':
+            top = stack.pop()
+            while top != '(':
+                postfix.append(top)
+                top = stack.pop()
+        else:
+            postfix.append(element)
+        index += 1
+
+    while stack != []:
+        postfix.append(stack.pop())
+
+    return [Node(x) for x in postfix]
+    
+def expressionTree(expression):
+    expression = re.findall(r"([A-Z]+|\d+|[-+()/*])", expression) 
+    postfix = infixToPostfix(expression)
+    print(f"\nPostfix expression = {' '.join([x.value for x in postfix])}")
+    stack = []
+    for node in postfix:
+        if node.value in '+-*/':
+            node.right = stack.pop()
+            node.left = stack.pop()
+            stack.append(node)
+        else:
+            stack.append(node)
+
+    return stack.pop()
+
 def main():
     global answer
     print("[1] Create a Binary Tree using inorder and preorder strings.")
     print("[2] Create a Binary Tree using inorder and postorder strings.")
     print("[3] Create a Binary Tree using array string.")
     print("[4] Create a BST.")
+    print("[5] Create an Expression Tree.")
     while(True):
         answer = input("Enter your choice: ")
         if answer == '1' or answer == '2':
@@ -236,6 +290,12 @@ def main():
                 print(f"\nPreorder string = {root.preorder()}")
                 print(f"Inorder string = {root.inorder()}")
                 print(f"Postorder string = {root.postorder()}")
+            break
+        elif answer == '5':
+            expression = input("Expression: ")
+            root = expressionTree(expression)
+            if root != None:
+                print(f"Prefix expression = {root.preorder()}")
             break
         else:
             print("Invalid choice!")
