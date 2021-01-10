@@ -60,7 +60,7 @@ class Node():
         while stack:
             node = stack.pop()
             if node:
-                result += " " + str(node.value)
+                result += " " + str(node.value)[::-1]
                 stack.append(node.left)
                 stack.append(node.right)
 
