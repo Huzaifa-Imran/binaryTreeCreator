@@ -1,4 +1,6 @@
 import re
+
+
 class Node():
     def __init__(self, value):
         self.value = self.val = value
@@ -9,7 +11,7 @@ class Node():
         lines = _build_tree_string(self, 0, False, '-')[0]
         return '\n' + '\n'.join((line.rstrip() for line in lines))
 
-    def __len__(self):  
+    def __len__(self):
         current_level = [self]
         size = 0
         while len(current_level) > 0:
@@ -20,7 +22,7 @@ class Node():
                     next_level.append(node.left)
                 if node.right is not None:
                     next_level.append(node.right)
-            
+
             current_level = next_level
         return size
 
@@ -35,7 +37,7 @@ class Node():
                 node = node.left
             if stack:
                 node = stack.pop()
-                result += str(node.value) + " " 
+                result += str(node.value) + " "
                 node = node.right
 
         return result
@@ -65,6 +67,7 @@ class Node():
                 stack.append(node.right)
 
         return result[::-1]
+
 
 def _build_tree_string(root, curr_index, index=False, delimiter='-'):
     if root is None:
@@ -124,6 +127,7 @@ def _build_tree_string(root, curr_index, index=False, delimiter='-'):
     # Return the new box, its width and its root repr positions
     return new_box, len(new_box[0]), new_root_start, new_root_end
 
+
 def subtreeFinder(answer, inorder, string):
     if string == []:
         return
@@ -145,7 +149,7 @@ def subtreeFinder(answer, inorder, string):
     rightInOrder = inorder[rootIndex+1:]
     leftString = string[:rootIndex]
     rightString = string[rootIndex:]
-    
+
     if not answer:
         print(root.value, end=" ")
 
@@ -156,8 +160,9 @@ def subtreeFinder(answer, inorder, string):
 
     if answer:
         print(root.value, end=" ")
-        
+
     return root
+
 
 def staticTree(string):
     nodes = [None if v == "-1" else Node(v) for v in string]
@@ -168,7 +173,8 @@ def staticTree(string):
             parent_index = (index - 1) // 2
             parent = nodes[parent_index]
             if parent is None:
-                print('parent node missing at index {}. Exiting...'.format(parent_index))
+                print('parent node missing at index {}. Exiting...'.format(
+                    parent_index))
                 exit()
             elif index % 2:
                 parent.left = node
@@ -176,6 +182,7 @@ def staticTree(string):
                 parent.right = node
 
     return nodes[0] if nodes else None
+
 
 def createBST(string):
     if string == []:
@@ -200,7 +207,7 @@ def createBST(string):
                 break
     return root
 
-# 2*3/(2-1)+5*(4-1)
+
 def infixToPostfix(expression):
     stack = []
     postfix = []
@@ -236,11 +243,37 @@ def infixToPostfix(expression):
         postfix.append(stack.pop())
 
     return [Node(x) for x in postfix]
-    
+
+
 def expressionTree(expression):
-    expression = re.findall(r"([A-Z]+|\d+|[-+()/*])", expression) 
+    expression = re.findall(r"([A-Z]+|\d+|[-+()/*])", expression)
     postfix = infixToPostfix(expression)
-    print(f"\nPostfix expression = {' '.join([x.value for x in postfix])}")
+    stack = []
+    for node in postfix:
+        if node.value in "+-*/":
+            try:
+                rightVal = int(stack.pop())
+                leftVal = int(stack.pop())
+            except ValueError:
+                print("\nCannot calculate result. Expression has non integer operands.")
+
+                break
+            except IndexError:
+                print("\nInvalid Expression. Exiting...")
+                exit()
+            if node.value == '+':
+                stack.append(leftVal + rightVal)
+            elif node.value == '-':
+                stack.append(leftVal - rightVal)
+            elif node.value == '*':
+                stack.append(leftVal * rightVal)
+            else:
+                stack.append(leftVal / rightVal)
+        else:
+            stack.append(node.value)
+    else:
+        print(f"\nResult = {stack.pop()}")
+    print(f"Postfix expression = {' '.join([x.value for x in postfix])}")
     stack = []
     for node in postfix:
         if node.value in '+-*/':
@@ -251,6 +284,7 @@ def expressionTree(expression):
             stack.append(node)
 
     return stack.pop()
+
 
 def main():
     global answer
@@ -275,7 +309,8 @@ def main():
             break
         elif answer == '3' or answer == '4':
             if answer == '3':
-                print("\nEnter the string with each character separated by spaces. Use -1 as a character to represent no node.")
+                print(
+                    "\nEnter the string with each character separated by spaces. Use -1 as a character to represent no node.")
                 string = input("String: ").split()
                 root = staticTree(string)
             else:
@@ -302,6 +337,7 @@ def main():
 
     print()
     print(root)
+
 
 if __name__ == '__main__':
     main()
