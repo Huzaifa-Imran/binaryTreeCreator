@@ -73,9 +73,9 @@ def applyOperations(root: Node):
             print(
                 f"Static array[{len(array)}] = {' '.join(array)}")
         elif choice.lower() == "maxheap":
-            root = maxHeapify(root)
+            root = heapifyTree(root, True)
         elif choice.lower() == "minheap":
-            root = minHeapify(root)
+            root = heapifyTree(root, False)
         elif choice.lower() == "exit":
             break
         else:
