@@ -319,7 +319,7 @@ def expressionTree(expression):
     return stack.pop() if stack != [] else None
 
 
-def maxHeapify(root: Node):
+def heapifyTree(root: Node, max: bool):
     array = root.staticArray()
     for i in reversed(array):
         if(i == '-1'):
@@ -338,58 +338,21 @@ def maxHeapify(root: Node):
 
     n = len(array)
     for i in range((n//2)-1, -1, -1):
-        parent = largest = i
+        parent = selected = i
         while(True):
             left = 2*parent+1
             right = 2*parent+2
-            if left < n and array[left] > array[largest]:
-                largest = left
-            if right < n and array[right] > array[largest]:
-                largest = right
-            if largest == parent:
+            if left < n:
+                if max and array[left] > array[selected] or not max and array[left] < array[selected]:
+                    selected = left
+            if right < n:
+                if max and array[right] > array[selected] or not max and array[right] < array[selected]:
+                    selected = right
+            if selected == parent:
                 break
             else:
-                array[largest], array[parent] = array[parent], array[largest]
-                parent = largest
-
-    root = staticTree([str(x) for x in array])
-    print('\n', root)
-    return root
-
-
-def minHeapify(root: Node):
-    array = root.staticArray()
-    for i in reversed(array):
-        if(i == '-1'):
-            del array[-1]
-        else:
-            break
-
-    if '-1' in array:
-        print("Cannot convert incomplete tree to heap.")
-        return root
-
-    try:
-        array = [int(x) for x in array]
-    except ValueError:
-        print("Cannot convert tree with non integer characters")
-        return root
-
-    n = len(array)
-    for i in range((n//2)-1, -1, -1):
-        parent = smallest = i
-        while(True):
-            left = 2*smallest+1
-            right = 2*smallest+2
-            if left < n and array[left] < array[smallest]:
-                smallest = left
-            if right < n and array[right] < array[smallest]:
-                smallest = right
-            if smallest == parent:
-                break
-            else:
-                array[parent], array[smallest] = array[smallest], array[parent]
-                parent = smallest
+                array[selected], array[parent] = array[parent], array[selected]
+                parent = selected
 
     root = staticTree([str(x) for x in array])
     print('\n', root)
