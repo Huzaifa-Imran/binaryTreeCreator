@@ -26,8 +26,24 @@ class Node():
             current_level = next_level
         return size
 
+    def height(self):
+        current_level = [self]
+        treeHeight = 1
+        while len(current_level) > 0:
+            treeHeight += 1
+            next_level = []
+            for node in current_level:
+                if node.left is not None:
+                    next_level.append(node.left)
+                if node.right is not None:
+                    next_level.append(node.right)
+
+            current_level = next_level
+
+        return treeHeight
+
     def inorder(self):
-        result = ""
+        result = []
         stack = []
         node = self
 
@@ -37,36 +53,58 @@ class Node():
                 node = node.left
             if stack:
                 node = stack.pop()
-                result += str(node.value) + " "
+                result.append(str(node.value))
                 node = node.right
 
         return result
 
     def preorder(self):
-        result = ""
+        result = []
         stack = [self]
 
         while stack:
             node = stack.pop()
             if node:
-                result += str(node.value) + " "
+                result.append(str(node.value))
                 stack.append(node.right)
                 stack.append(node.left)
 
         return result
 
     def postorder(self):
-        result = ""
+        result = []
         stack = [self]
 
         while stack:
             node = stack.pop()
             if node:
-                result += " " + str(node.value)[::-1]
+                result.append(str(node.value))
                 stack.append(node.left)
                 stack.append(node.right)
 
         return result[::-1]
+
+    def staticArray(self):
+        current_level = [self]
+        result = []
+        level = 1
+        height = self.height()
+        while level < height:
+            next_level = []
+            for node in current_level:
+                if node != None:
+                    result.append(str(node.value))
+                    next_level.append(node.left)
+                    next_level.append(node.right)
+                else:
+                    result.append('-1')
+                    next_level.append(None)
+                    next_level.append(None)
+
+            current_level = next_level
+            level += 1
+
+        return result
 
 
 def _build_tree_string(root, curr_index, index=False, delimiter='-'):
@@ -150,22 +188,16 @@ def subtreeFinder(answer, inorder, string):
     leftString = string[:rootIndex]
     rightString = string[rootIndex:]
 
-    if not answer:
-        print(root.value, end=" ")
-
     if len(leftInOrder):
         root.left = subtreeFinder(answer, leftInOrder, leftString)
     if len(rightInOrder):
         root.right = subtreeFinder(answer, rightInOrder, rightString)
 
-    if answer:
-        print(root.value, end=" ")
-
     return root
 
 
-def staticTree(string):
-    nodes = [None if v == "-1" else Node(v) for v in string]
+def staticTree(array):
+    nodes = [None if v == "-1" else Node(v) for v in array]
 
     for index in range(1, len(nodes)):
         node = nodes[index]
@@ -184,22 +216,22 @@ def staticTree(string):
     return nodes[0] if nodes else None
 
 
-def createBST(string):
-    if string == []:
+def createBST(array):
+    if not array:
         return
-    root = Node(string.pop(0))
-    for index in range(0, len(string)):
+    root = Node(array.pop(0))
+    for index in range(0, len(array)):
         temp = root
         while(True):
-            if string[index] > temp.value:
+            if array[index] > temp.value:
                 if temp.right == None:
-                    temp.right = Node(string[index])
+                    temp.right = Node(array[index])
                     break
                 else:
                     temp = temp.right
-            elif string[index] < temp.value:
+            elif array[index] < temp.value:
                 if temp.left == None:
-                    temp.left = Node(string[index])
+                    temp.left = Node(array[index])
                     break
                 else:
                     temp = temp.left
@@ -256,7 +288,6 @@ def expressionTree(expression):
                 leftVal = int(stack.pop())
             except ValueError:
                 print("\nCannot calculate result. Expression has non integer operands.")
-
                 break
             except IndexError:
                 print("\nInvalid Expression. Exiting...")
@@ -272,8 +303,10 @@ def expressionTree(expression):
         else:
             stack.append(node.value)
     else:
+        if not stack:
+            stack.append(0)
         print(f"\nResult = {stack.pop()}")
-    print(f"Postfix expression = {' '.join([x.value for x in postfix])}")
+
     stack = []
     for node in postfix:
         if node.value in '+-*/':
@@ -283,61 +316,81 @@ def expressionTree(expression):
         else:
             stack.append(node)
 
-    return stack.pop()
+    return stack.pop() if stack != [] else None
 
 
-def main():
-    global answer
-    print("[1] Create a Binary Tree using inorder and preorder strings.")
-    print("[2] Create a Binary Tree using inorder and postorder strings.")
-    print("[3] Create a Binary Tree using array string.")
-    print("[4] Create a BST.")
-    print("[5] Create an Expression Tree.")
-    while(True):
-        answer = input("Enter your choice: ")
-        if answer == '1' or answer == '2':
-            print("\nEnter the strings with each character separated by spaces.")
-            inorder = input("In Order string: ").split()
-            if answer == '1':
-                preorder = input("Pre Order string: ").split()
-                print("\nPost Order String = ", end="")
-                root = subtreeFinder(True, inorder, preorder)
-            else:
-                postorder = input("Post Order string: ").split()
-                print("\nPre Order String = ", end="")
-                root = subtreeFinder(False, inorder, postorder)
-            break
-        elif answer == '3' or answer == '4':
-            if answer == '3':
-                print(
-                    "\nEnter the string with each character separated by spaces. Use -1 as a character to represent no node.")
-                string = input("String: ").split()
-                root = staticTree(string)
-            else:
-                print("\nEnter the string with each number separated by spaces.")
-                try:
-                    string = [int(x) for x in input("String: ").split()]
-                except ValueError:
-                    print("BST can only contain numbers! Exiting...")
-                    exit()
-                root = createBST(string)
-            if root != None:
-                print(f"\nPreorder string = {root.preorder()}")
-                print(f"Inorder string = {root.inorder()}")
-                print(f"Postorder string = {root.postorder()}")
-            break
-        elif answer == '5':
-            expression = input("Expression: ")
-            root = expressionTree(expression)
-            if root != None:
-                print(f"Prefix expression = {root.preorder()}")
-            break
+def maxHeapify(root: Node):
+    array = root.staticArray()
+    for i in reversed(array):
+        if(i == '-1'):
+            del array[-1]
         else:
-            print("Invalid choice!")
+            break
+    if '-1' in array:
+        print("Cannot convert incomplete tree to heap.")
+        return root
 
-    print()
-    print(root)
+    try:
+        array = [int(x) for x in array]
+    except ValueError:
+        print("Cannot convert tree with non integer characters")
+        return root
+
+    n = len(array)
+    for i in range((n//2)-1, -1, -1):
+        parent = largest = i
+        while(True):
+            left = 2*parent+1
+            right = 2*parent+2
+            if left < n and array[left] > array[largest]:
+                largest = left
+            if right < n and array[right] > array[largest]:
+                largest = right
+            if largest == parent:
+                break
+            else:
+                array[largest], array[parent] = array[parent], array[largest]
+                parent = largest
+
+    root = staticTree([str(x) for x in array])
+    print('\n', root)
+    return root
 
 
-if __name__ == '__main__':
-    main()
+def minHeapify(root: Node):
+    array = root.staticArray()
+    for i in reversed(array):
+        if(i == '-1'):
+            del array[-1]
+        else:
+            break
+
+    if '-1' in array:
+        print("Cannot convert incomplete tree to heap.")
+        return root
+
+    try:
+        array = [int(x) for x in array]
+    except ValueError:
+        print("Cannot convert tree with non integer characters")
+        return root
+
+    n = len(array)
+    for i in range((n//2)-1, -1, -1):
+        parent = smallest = i
+        while(True):
+            left = 2*smallest+1
+            right = 2*smallest+2
+            if left < n and array[left] < array[smallest]:
+                smallest = left
+            if right < n and array[right] < array[smallest]:
+                smallest = right
+            if smallest == parent:
+                break
+            else:
+                array[parent], array[smallest] = array[smallest], array[parent]
+                parent = smallest
+
+    root = staticTree([str(x) for x in array])
+    print('\n', root)
+    return root
