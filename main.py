@@ -8,6 +8,7 @@ def takeInput():
     print("[3] Create a Binary Tree using array string.")
     print("[4] Create a BST.")
     print("[5] Create an Expression Tree.")
+    print("[6] Create Huffman Tree.")
     while(True):
         answer = input("Enter your choice: ")
         if answer == '1' or answer == '2':
@@ -38,6 +39,10 @@ def takeInput():
         elif answer == '5':
             expression = input("Expression: ")
             root = expressionTree(expression)
+            break
+        elif answer == '6':
+            text = input("Enter text to compress: ")
+            root = huffmanTree(text)
             break
         else:
             print("Invalid choice!")

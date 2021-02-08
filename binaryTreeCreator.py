@@ -115,6 +115,8 @@ def _build_tree_string(root, curr_index, index=False, delimiter='-'):
     line2 = []
     if index:
         node_repr = '{}{}{}'.format(curr_index, delimiter, root.val)
+    if isinstance(root.val, tuple):
+        node_repr = '{}{}{}'.format(root.val[0], delimiter, root.val[1])
     else:
         node_repr = str(root.val)
 
@@ -357,3 +359,47 @@ def heapifyTree(root: Node, max: bool):
     root = staticTree([str(x) for x in array])
     print('\n', root)
     return root
+
+
+def huffmanTree(text: str):
+    freq = {}
+    for char in text:
+        if freq.get((char)):
+            freq[char] += 1
+        else:
+            freq[char] = 1
+    temp = [Node(x) for x in freq.items()]
+    while(len(temp) > 1):
+        nodes = []
+        for j in range(2):
+            minFreq = temp[0].value[1]
+            minNode = temp[0]
+            for i in temp:
+                if i.value[1] < minFreq:
+                    minFreq = i.value[1]
+                    minNode = i
+            nodes.append(minNode)
+            temp.remove(minNode)
+        root = Node((nodes[0].value[0]+nodes[1].value[0],
+                     nodes[0].value[1]+nodes[1].value[1]))
+        root.left = nodes[0]
+        root.right = nodes[1]
+        temp.insert(0, root)
+    if temp:
+        huffmanCodes(temp[0], '')
+        return temp[0]
+    return None
+
+
+def huffmanCodes(root: Node):
+    current_level = [(root, '')]
+
+    while len(current_level) > 0:
+        next_level = []
+        for node in current_level:
+            if node[0].left:
+                next_level.append((node[0].left, node[1]+'0'))
+                next_level.append((node[0].right, node[1]+'1'))
+            else:
+                print(f"{node[0].value} => {node[1]}")
+        current_level = next_level
