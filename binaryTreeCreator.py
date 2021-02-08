@@ -386,7 +386,7 @@ def huffmanTree(text: str):
         root.right = nodes[1]
         temp.insert(0, root)
     if temp:
-        huffmanCodes(temp[0], '')
+        huffmanCodes(temp[0])
         return temp[0]
     return None
 
