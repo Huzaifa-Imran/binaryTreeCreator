@@ -1,7 +1,5 @@
 # binaryTreeCreator
-Automatically creates a binary tree, BST or Expression Tree with the given strings.
-
-Input the strings with each character spearated by spaces.
+Automatically creates a Binary Tree, BST, Huffman Tree or Expression Tree with the given strings.
 
 Make sure you have Python compiler installed on your computer and added to PATH.
 
